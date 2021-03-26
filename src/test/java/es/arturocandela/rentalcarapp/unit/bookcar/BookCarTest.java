@@ -1,7 +1,7 @@
 package es.arturocandela.rentalcarapp.unit.bookcar;
 
-import es.arturocandela.rentalcarapp.model.implementation.Booking;
-import es.arturocandela.rentalcarapp.model.implementation.Car;
+import es.arturocandela.rentalcarapp.model.ICar;
+import es.arturocandela.rentalcarapp.model.ABooking;
 import es.arturocandela.rentalcarapp.model.implementation.User;
 import es.arturocandela.rentalcarapp.service.CarFinder;
 import es.arturocandela.rentalcarapp.service.DBConnection;
@@ -9,13 +9,10 @@ import es.arturocandela.rentalcarapp.service.InsertException;
 import es.arturocandela.rentalcarapp.usecase.BookCar;
 import es.arturocandela.rentalcarapp.usecase.CarNotAvailableException;
 import es.arturocandela.rentalcarapp.usecase.MinorsCannotBookCarsException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,7 +41,7 @@ public class BookCarTest extends BookCarBaseTest{
     DBConnection dbConnection;
 
     @Mock
-    Car carStub;
+    ICar carStub;
 
     @Mock
     CarFinder carFinderStub;
@@ -69,9 +66,9 @@ public class BookCarTest extends BookCarBaseTest{
 
         BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
 
-        Booking booking = bookCarUseCase.execute(userStub,1);
+        ABooking ABooking = bookCarUseCase.execute(userStub,1);
 
-        assertTrue(booking instanceof Booking);
+        assertTrue(ABooking instanceof ABooking);
 
     }
 
@@ -94,9 +91,37 @@ public class BookCarTest extends BookCarBaseTest{
         BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
 
         assertThrows(CarNotAvailableException.class,()->{
-            Booking booking = bookCarUseCase.execute(userStub,1);
-            assertTrue(booking instanceof Booking);
+            ABooking ABooking = bookCarUseCase.execute(userStub,1);
+            assertTrue(ABooking instanceof ABooking);
         });
 
+    }
+
+    @DisplayName("Adults cannot book non existent cars")
+    @Test
+    public void adultsCantBookNonExistentCars()
+    {
+            fail();
+    }
+
+    @DisplayName("Minors cannot book Available Cars")
+    @Test
+    public void minorsCannotBookAvailableCars()
+    {
+        fail();
+    }
+
+    @DisplayName("Minors cannot book Unvailable Cars")
+    @Test
+    public void minorsCannotBookUnvailableCars()
+    {
+        fail();
+    }
+
+    @DisplayName("Minors cannot book NonExistent Cars")
+    @Test
+    public void minorsCannotBookNonExistentCars()
+    {
+        fail();
     }
 }
