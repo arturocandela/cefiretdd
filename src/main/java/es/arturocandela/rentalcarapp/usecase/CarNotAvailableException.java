@@ -1,6 +1,6 @@
 package es.arturocandela.rentalcarapp.usecase;
 
-public class CarNotAvailableException extends Exception{
+public class CarNotAvailableException extends BookingException{
 
     public CarNotAvailableException()
     {
