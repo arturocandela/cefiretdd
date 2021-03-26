@@ -1,9 +1,10 @@
 package es.arturocandela.rentalcarapp.usecase;
 
+import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
-import es.arturocandela.rentalcarapp.model.implementation.Car;
 import es.arturocandela.rentalcarapp.model.implementation.User;
 import es.arturocandela.rentalcarapp.service.CarFinder;
+import es.arturocandela.rentalcarapp.service.CarNotFoundException;
 import es.arturocandela.rentalcarapp.service.DBConnection;
 import es.arturocandela.rentalcarapp.service.InsertException;
 
@@ -18,12 +19,16 @@ public class BookCar {
         this.dbConnection=dbConnection;
     }
 
-    public Booking execute(User user, int carId) throws Exception
-    {
+    public Booking execute(User user, int carId) throws BookingException, InsertException {
+
+        if (!user.isAnAdult()){
+            throw new MinorsCannotBookCarsException();
+        }
+
         Car car = carFinder.find(carId);
 
-        if (car.isAvailable()){
-            throw new Exception();
+        if (!car.isAvailable()){
+            throw new CarNotAvailableException(String.format("The car is not available"));
         }
 
         return bookCar(user,car);
