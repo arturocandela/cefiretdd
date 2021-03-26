@@ -18,12 +18,15 @@ public class BookCar {
         this.dbConnection=dbConnection;
     }
 
-    public Booking execute(User user, int carId) throws Exception
-    {
+    public Booking execute(User user, int carId) throws CarNotAvailableException, InsertException, MinorsCannotBookCarsException {
         Car car = carFinder.find(carId);
 
-        if (car.isAvailable()){
-            throw new Exception();
+        if (!user.isAnAdult()){
+            throw new MinorsCannotBookCarsException();
+        }
+
+        if (!car.isAvailable()){
+            throw new CarNotAvailableException(String.format("The car is not available"));
         }
 
         return bookCar(user,car);
