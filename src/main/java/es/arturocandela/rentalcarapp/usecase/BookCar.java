@@ -21,15 +21,11 @@ public class BookCar {
 
     public Booking execute(User user, int carId) throws BookingException, InsertException {
 
-        Car car = carFinder.find(carId);
-
         if (!user.isAnAdult()){
             throw new MinorsCannotBookCarsException();
         }
 
-        if (null == car){
-            throw new CarNotFoundException(String.format("The car with id %d was not found",carId));
-        }
+        Car car = carFinder.find(carId);
 
         if (!car.isAvailable()){
             throw new CarNotAvailableException(String.format("The car is not available"));

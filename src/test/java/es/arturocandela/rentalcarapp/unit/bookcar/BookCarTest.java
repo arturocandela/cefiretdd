@@ -128,7 +128,7 @@ public class BookCarTest {
         when(dbConnection.insert(anyString())).thenReturn(1);
 
         assertNotNull(carFinderStub);
-        when(carFinderStub.find(anyInt())).thenReturn(null);
+        when(carFinderStub.find(anyInt())).thenThrow(CarNotFoundException.class);
 
         BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
 
