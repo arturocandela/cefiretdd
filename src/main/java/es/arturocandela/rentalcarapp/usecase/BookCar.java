@@ -1,13 +1,12 @@
 package es.arturocandela.rentalcarapp.usecase;
 
-import es.arturocandela.rentalcarapp.model.ICar;
+import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
 import es.arturocandela.rentalcarapp.model.implementation.User;
 import es.arturocandela.rentalcarapp.service.CarFinder;
+import es.arturocandela.rentalcarapp.service.CarNotFoundException;
 import es.arturocandela.rentalcarapp.service.DBConnection;
 import es.arturocandela.rentalcarapp.service.InsertException;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 public class BookCar {
 
@@ -22,7 +21,7 @@ public class BookCar {
 
     public Booking execute(User user, int carId) throws BookingException, InsertException {
 
-        ICar car = carFinder.find(carId);
+        Car car = carFinder.find(carId);
 
         if (!user.isAnAdult()){
             throw new MinorsCannotBookCarsException();
@@ -40,7 +39,7 @@ public class BookCar {
 
     }
 
-    private Booking bookCar(User user, ICar car) throws InsertException {
+    private Booking bookCar(User user, Car car) throws InsertException {
         String sql = String.format("INSERT INTO bookings (userId, carId) " +
                 "values(%d,%d)",user.getId(),car.getId());
         return new Booking(dbConnection.insert(sql),user,car);

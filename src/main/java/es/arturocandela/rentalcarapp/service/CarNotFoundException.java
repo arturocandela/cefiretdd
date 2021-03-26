@@ -1,6 +1,8 @@
-package es.arturocandela.rentalcarapp.usecase;
+package es.arturocandela.rentalcarapp.service;
 
-public class CarNotFoundException extends BookingException{
+import es.arturocandela.rentalcarapp.usecase.BookingException;
+
+public class CarNotFoundException extends BookingException {
 
     public CarNotFoundException(){
         super();

@@ -1,22 +1,19 @@
 package es.arturocandela.rentalcarapp.unit.bookcar;
 
 import es.arturocandela.rentalcarapp.customtags.UnitTest;
-import es.arturocandela.rentalcarapp.model.ICar;
+import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
 import es.arturocandela.rentalcarapp.model.implementation.User;
 import es.arturocandela.rentalcarapp.service.CarFinder;
+import es.arturocandela.rentalcarapp.service.CarNotFoundException;
 import es.arturocandela.rentalcarapp.service.DBConnection;
 import es.arturocandela.rentalcarapp.service.InsertException;
 import es.arturocandela.rentalcarapp.usecase.*;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -29,7 +26,7 @@ import static org.mockito.Mockito.when;
  * initializations on each property
  */
 @UnitTest
-@DisplayName("Book Car Test")
+@DisplayName("Unit Tests of Book Car Test")
 @ExtendWith(MockitoExtension.class)
 public class BookCarTest {
 
@@ -46,7 +43,7 @@ public class BookCarTest {
     DBConnection dbConnection;
 
     @Mock(lenient = true)
-    ICar carStub;
+    Car carStub;
 
     @Mock(lenient = true)
     CarFinder carFinderStub;
