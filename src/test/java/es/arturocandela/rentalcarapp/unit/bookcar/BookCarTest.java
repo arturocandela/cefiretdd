@@ -4,21 +4,20 @@ import es.arturocandela.rentalcarapp.customtags.UnitTest;
 import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
 import es.arturocandela.rentalcarapp.model.implementation.User;
-import es.arturocandela.rentalcarapp.service.CarFinder;
-import es.arturocandela.rentalcarapp.service.CarNotFoundException;
-import es.arturocandela.rentalcarapp.service.DBConnection;
-import es.arturocandela.rentalcarapp.service.InsertException;
+import es.arturocandela.rentalcarapp.service.*;
 import es.arturocandela.rentalcarapp.usecase.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * In this test, It is needed the use of
@@ -29,12 +28,6 @@ import static org.mockito.Mockito.when;
 @DisplayName("Unit Tests of Book Car Test")
 @ExtendWith(MockitoExtension.class)
 public class BookCarTest {
-
-    //@BeforeEach
-    //public void beforeEach()
-    //{
-    //    MockitoAnnotations.initMocks(this)  ;
-    //}
 
     @Mock(lenient = true)
     User userStub;
@@ -47,6 +40,12 @@ public class BookCarTest {
 
     @Mock(lenient = true)
     CarFinder carFinderStub;
+
+    @Mock(lenient = true)
+    IConfirmationNotifier notifier;
+
+    @Mock
+    BookingRepository bookingRepository;
 
     /**
      * Escenario Éxito: Un usuario adulto inicia el proceso de reserva de un coche disponible.
@@ -70,10 +69,13 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
+        assertNotNull(notifier);
+
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
 
         Booking booking = bookCarUseCase.execute(userStub,1);
 
+        verify(notifier,times(1)).send(any());
         assertTrue(booking instanceof Booking);
 
     }
@@ -86,7 +88,6 @@ public class BookCarTest {
      *
      */
     @DisplayName("F.TS.1: Adults cannot book unavailable cars")
-
     @Test
     public void adultsCantBookUnavailableCars() throws BookingException, InsertException {
         assertNotNull(userStub);
@@ -102,10 +103,14 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
+        assertNotNull(notifier);
+
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
+
 
         assertThrows(CarNotAvailableException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
+            verify(notifier,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
 
@@ -130,10 +135,13 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenThrow(CarNotFoundException.class);
 
-        BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
+        assertNotNull(notifier);
+
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
 
         assertThrows(CarNotFoundException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
+            verify(notifier,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
 
@@ -161,10 +169,14 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
+        assertNotNull(notifier);
+
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
+
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
+            verify(notifier,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
     }
@@ -190,10 +202,14 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
+        assertNotNull(notifier);
+
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
+
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
+            verify(notifier,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
 
@@ -217,10 +233,13 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(null);
 
-        BookCar bookCarUseCase = new BookCar( carFinderStub , dbConnection );
+        assertNotNull(notifier);
+
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
-            Booking booking = bookCarUseCase.execute(userStub,1);
+            Booking booking = bookCarUseCase.execute(userStub,0);
+            verify(notifier,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
     }
