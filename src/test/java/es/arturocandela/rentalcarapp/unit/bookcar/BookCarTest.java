@@ -33,9 +33,6 @@ public class BookCarTest {
     User userStub;
 
     @Mock(lenient = true)
-    DBConnection dbConnection;
-
-    @Mock(lenient = true)
     Car carStub;
 
     @Mock(lenient = true)
@@ -44,8 +41,8 @@ public class BookCarTest {
     @Mock(lenient = true)
     IConfirmationNotifier notifier;
 
-    @Mock
-    BookingRepository bookingRepository;
+    @Mock(lenient = true)
+    BookingRepository bookingRepositoryStub;
 
     /**
      * Escenario Éxito: Un usuario adulto inicia el proceso de reserva de un coche disponible.
@@ -60,18 +57,18 @@ public class BookCarTest {
         when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(true);
 
-        assertNotNull(dbConnection);
-        when(dbConnection.insert(anyString())).thenReturn(1);
-
         assertNotNull(carStub);
         when(carStub.isAvailable()).thenReturn(true);
 
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
+        assertNotNull(bookingRepositoryStub);
+        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
 
         Booking booking = bookCarUseCase.execute(userStub,1);
 
@@ -94,18 +91,18 @@ public class BookCarTest {
         when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(true);
 
-        assertNotNull(dbConnection);
-        when(dbConnection.insert(anyString())).thenReturn(1);
-
         assertNotNull(carStub);
         when(carStub.isAvailable()).thenReturn(false);
 
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
+        assertNotNull(bookingRepositoryStub);
+        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
 
 
         assertThrows(CarNotAvailableException.class,()->{
@@ -129,15 +126,15 @@ public class BookCarTest {
         when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(true);
 
-        assertNotNull(dbConnection);
-        when(dbConnection.insert(anyString())).thenReturn(1);
-
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenThrow(CarNotFoundException.class);
 
+        assertNotNull(bookingRepositoryStub);
+        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
 
         assertThrows(CarNotFoundException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
@@ -160,19 +157,18 @@ public class BookCarTest {
         when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(false);
 
-        assertNotNull(dbConnection);
-        when(dbConnection.insert(anyString())).thenReturn(1);
-
         assertNotNull(carStub);
         when(carStub.isAvailable()).thenReturn(true);
 
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
+        assertNotNull(bookingRepositoryStub);
+        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
-
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
@@ -193,19 +189,18 @@ public class BookCarTest {
         when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(false);
 
-        assertNotNull(dbConnection);
-        when(dbConnection.insert(anyString())).thenReturn(1);
-
         assertNotNull(carStub);
         when(carStub.isAvailable()).thenReturn(false);
 
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
+        assertNotNull(bookingRepositoryStub);
+        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
-
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
@@ -227,15 +222,15 @@ public class BookCarTest {
         when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(false);
 
-        assertNotNull(dbConnection);
-        when(dbConnection.insert(anyString())).thenReturn(1);
-
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(null);
 
+        assertNotNull(bookingRepositoryStub);
+        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepository,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,0);

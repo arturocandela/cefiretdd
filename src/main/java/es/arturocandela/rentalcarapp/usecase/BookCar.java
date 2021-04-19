@@ -8,8 +8,8 @@ import es.arturocandela.rentalcarapp.service.*;
 public class BookCar {
 
     private CarFinder carFinder;
-    private IConfirmationNotifier notifier;
     private BookingRepository bookingRepository;
+    private IConfirmationNotifier notifier;
 
     public BookCar(CarFinder carFinder,BookingRepository bookingRepository,IConfirmationNotifier notifier)
     {
