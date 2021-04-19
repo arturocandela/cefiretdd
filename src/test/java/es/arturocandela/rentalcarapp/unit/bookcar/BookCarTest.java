@@ -23,7 +23,6 @@ import static org.mockito.Mockito.*;
  */
 @UnitTest
 @DisplayName("Unit Tests of Book Car Test")
-@ExtendWith(MockitoExtension.class)
 public class BookCarTest {
 
     /**
@@ -33,7 +32,7 @@ public class BookCarTest {
      */
     @DisplayName("S.TS.1: Adults can book Available Cars")
     @Test
-    public void adultsCanBookAvailableCars() throws BookingException,InsertException {
+    public void adultsCanBookAvailableCars() throws BookingException,InsertException,NotificationFailedException {
 
         User userStub = mock(User.class);
         assertNotNull(userStub);

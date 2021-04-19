@@ -19,7 +19,7 @@ public class BookCar {
 
     }
 
-    public Booking execute(User user, int carId) throws BookingException, InsertException {
+    public Booking execute(User user, int carId) throws BookingException, InsertException,NotificationFailedException {
 
         if (!user.isAnAdult()){
             throw new MinorsCannotBookCarsException();
