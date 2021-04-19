@@ -8,13 +8,11 @@ import java.sql.*;
 import java.util.Map;
 
 /**
- * La clase gestiona la conexión con la base de datos
- *
- * @TODO Se debe revisar las conexiones, la obertura y el cierre. Esta hecho de pruebas, pero no para ejecucion.
+ * This class manages a connection to MySQL Server Storage Provider
  */
 public class MySQLDBConnection implements DBConnection {
 
-    private Connection conn = null;
+    private final Connection conn;
 
     /**
      * Tries to create a connection to MySQL Database
@@ -24,7 +22,7 @@ public class MySQLDBConnection implements DBConnection {
      * @param dbPass Password
      * @param dbName Database Name
      * @param dbPort Database Port
-     * @throws NonValidConnectionException
+     * @throws NonValidConnectionException If there is an error trying to connect
      */
     public MySQLDBConnection(String host, String dbUser, String dbPass, String dbName, int dbPort) throws NonValidConnectionException
     {
@@ -35,13 +33,7 @@ public class MySQLDBConnection implements DBConnection {
         {
             conn = DriverManager.getConnection(mysqlConnUrl,dbUser,dbPass);
 
-        } catch (SQLTimeoutException e){
-            throw new NonValidConnectionException(e);
-        } catch (SQLException e)
-        {
-            throw new NonValidConnectionException(e);
-        }
-        catch (Exception e)
+        }  catch (SQLException e)
         {
             throw new NonValidConnectionException(e);
         }
@@ -55,7 +47,7 @@ public class MySQLDBConnection implements DBConnection {
      * @param dbUser User of the Database
      * @param dbPass Password
      * @param dbName Database Name
-     * @throws NonValidConnectionException
+     * @throws NonValidConnectionException If there is an error trying to connect
      */
     public MySQLDBConnection(String host, String dbUser, String dbPass, String dbName) throws NonValidConnectionException
     {
@@ -63,7 +55,7 @@ public class MySQLDBConnection implements DBConnection {
     }
 
     /// <summary>
-    /// Runs and insert sql statment in the database
+    /// Runs and insert sql statement in the database
     /// </summary>
     /// <param name="sql">SQL to insert</param>
     /// <returns>first ID of the inserted registry</returns>
@@ -76,25 +68,29 @@ public class MySQLDBConnection implements DBConnection {
             statement = conn.createStatement();
             statement.execute(sql,Statement.RETURN_GENERATED_KEYS);
 
-            int autoIncKeyFromApi = -1;
-
             ResultSet rs = statement.getGeneratedKeys();
 
             if (rs.next()) {
-                return rs.getInt(1);
+                int id = rs.getInt(1);
+                rs.close();
+                return id;
             } else {
-
                 throw new InsertException("I was unable to get the inserted id");
             }
 
         } catch(Exception e)
         {
-            if (statement != null){
-                try {
+            try {
+
+                if (statement != null){
                     statement.close();
-                } catch (SQLException throwables) {
-                    throw  new InsertException(throwables.getLocalizedMessage());
                 }
+
+
+            } catch (SQLException ex){
+
+                throw new InsertException(ex);
+
             }
 
             throw new InsertException(e);
@@ -109,7 +105,9 @@ public class MySQLDBConnection implements DBConnection {
 
     public void close() throws SQLException
     {
-        //TODO: Si conn es null fallará ()
-        conn.close();
+        if (conn != null){
+            conn.close();
+        }
+
     }
 }
