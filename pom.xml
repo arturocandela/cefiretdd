@@ -6,7 +6,7 @@
 
     <groupId>es.arturocandela</groupId>
     <artifactId>rentalcarapp</artifactId>
-    <version>1.0.1.3</version>
+    <version>1.0.1.7</version>
     <name>RentalCarArt</name>
     <packaging>war</packaging>
 
@@ -121,7 +121,7 @@
                         </goals>
                         <!-- default target/jscoco/site/* -->
                         <configuration>
-                            <outputDirectory>target/jacoco-report</outputDirectory>
+                            <outputDirectory>target/site/jacoco</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

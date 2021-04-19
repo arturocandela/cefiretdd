@@ -89,10 +89,6 @@ public class MySQLDBConnection implements DBConnection {
 
         } catch(Exception e)
         {
-            throw new InsertException(e);
-        }
-        finally {
-
             if (statement != null){
                 try {
                     statement.close();
@@ -101,7 +97,9 @@ public class MySQLDBConnection implements DBConnection {
                 }
             }
 
+            throw new InsertException(e);
         }
+
     }
 
     public Map<String,Object> query(String sql)
