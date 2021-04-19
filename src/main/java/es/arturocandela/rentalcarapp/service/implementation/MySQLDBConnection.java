@@ -97,7 +97,7 @@ public class MySQLDBConnection implements DBConnection {
                 try {
                     statement.close();
                 } catch (SQLException throwables) {
-                    throwables.printStackTrace();
+                    throw  new InsertException(throwables.getLocalizedMessage());
                 }
             }
 
