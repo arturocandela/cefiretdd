@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RegisterUserTest {
 
-    @Mock(lenient = true)
+    @Mock
     DBConnection dbConnection;
 
     @InjectMocks

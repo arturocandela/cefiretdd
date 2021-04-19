@@ -8,9 +8,7 @@ import es.arturocandela.rentalcarapp.service.*;
 import es.arturocandela.rentalcarapp.usecase.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.verification.VerificationMode;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -24,6 +22,21 @@ import static org.mockito.Mockito.*;
 @UnitTest
 @DisplayName("Unit Tests of Book Car Test")
 public class BookCarTest {
+
+    private void checkRepositoryCheckCallToTransactionMethod(BookingRepository bookingRepositoryMock,
+                                                             VerificationMode beginMode,
+                                                             VerificationMode commitMode,
+                                                             VerificationMode rollbackMode)
+    {
+        verify(bookingRepositoryMock,beginMode).beginTransaction();
+        verify(bookingRepositoryMock,commitMode).commitTransaction();
+        verify(bookingRepositoryMock,rollbackMode).rollbackTransaction();
+    }
+
+    private void checkRepositoryMockWithNoCallsToTransactionMethods(BookingRepository bookingRepositoryMock)
+    {
+        checkRepositoryCheckCallToTransactionMethod(bookingRepositoryMock,never(),never(),never());
+    }
 
     /**
      * Escenario Éxito: Un usuario adulto inicia el proceso de reserva de un coche disponible.
@@ -46,17 +59,22 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        BookingRepository bookingRepositoryStub = mock(BookingRepository.class);
-        assertNotNull(bookingRepositoryStub);
-        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+        BookingRepository bookingRepositoryMock = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryMock);
+        when(bookingRepositoryMock.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
 
         IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
         assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifierDummy);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryMock,notifierDummy);
         Booking booking = bookCarUseCase.execute(userStub,1);
 
+        verify(bookingRepositoryMock,times(1)).beginTransaction();
+        verify(bookingRepositoryMock,times(1)).commitTransaction();
+        verify(bookingRepositoryMock,never()).rollbackTransaction();
+
         verify(notifierDummy,times(1)).send(any());
+
         assertTrue(booking instanceof Booking);
 
     }
@@ -84,17 +102,18 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
-        assertNotNull(bookingRepositoryDummy);
+        BookingRepository bookingRepositoryMock = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryMock);
 
         IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
         assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifierDummy);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryMock,notifierDummy);
 
 
         assertThrows(CarNotAvailableException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
+            checkRepositoryMockWithNoCallsToTransactionMethods(bookingRepositoryMock);
             verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
@@ -119,16 +138,19 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenThrow(CarNotFoundException.class);
 
-        BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
-        assertNotNull(bookingRepositoryDummy);
+        BookingRepository bookingRepositoryMock = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryMock);
 
         IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
         assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifierDummy);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryMock,notifierDummy);
 
         assertThrows(CarNotFoundException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
+            verify(bookingRepositoryMock,never()).beginTransaction();
+            verify(bookingRepositoryMock,never()).commitTransaction();
+            verify(bookingRepositoryMock,never()).rollbackTransaction();
             verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
@@ -233,5 +255,39 @@ public class BookCarTest {
             verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
+    }
+
+    @Test
+    public void rollBackOnNotificationFail() throws NotificationFailedException, CarNotFoundException, InsertException {
+        User userStub = mock(User.class);
+        assertNotNull(userStub);
+        when(userStub.isAnAdult()).thenReturn(true);
+
+        Car carStub = mock(Car.class);
+        assertNotNull(carStub);
+        when(carStub.getId()).thenReturn(1);
+        when(carStub.isAvailable()).thenReturn(true);
+
+        CarFinder carFinderStub = mock(CarFinder.class);
+        assertNotNull(carFinderStub);
+        when(carFinderStub.find(anyInt())).thenReturn(carStub);
+
+        BookingRepository bookingRepositoryMock = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryMock);
+        when(bookingRepositoryMock.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+
+        IConfirmationNotifier notifierStub = mock(IConfirmationNotifier.class);
+        assertNotNull(notifierStub);
+        doThrow(NotificationFailedException.class).when(notifierStub).send(any());
+
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryMock,notifierStub);
+
+        assertThrows(NotificationFailedException.class,()->{
+            Booking booking = bookCarUseCase.execute(userStub, carStub.getId());
+            checkRepositoryCheckCallToTransactionMethod(bookingRepositoryMock,
+                    times(1),
+                    never(),times(1));
+        });
+
     }
 }

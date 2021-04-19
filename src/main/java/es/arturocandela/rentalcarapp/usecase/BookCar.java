@@ -5,6 +5,8 @@ import es.arturocandela.rentalcarapp.model.implementation.Booking;
 import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.service.*;
 
+import java.util.logging.Logger;
+
 public class BookCar {
 
     private CarFinder carFinder;
@@ -19,7 +21,7 @@ public class BookCar {
 
     }
 
-    public Booking execute(User user, int carId) throws BookingException, InsertException,NotificationFailedException {
+    public Booking execute(User user, int carId) throws BookingException, NotificationFailedException, InsertException {
 
         if (!user.isAnAdult()){
             throw new MinorsCannotBookCarsException();
@@ -31,9 +33,19 @@ public class BookCar {
             throw new CarNotAvailableException(String.format("The car is not available"));
         }
 
-        Booking booking = bookingRepository.bookCar(user, car);
+        Booking booking = null;
 
-        notifier.send(booking);
+        bookingRepository.beginTransaction();
+
+        try {
+
+            booking = bookingRepository.bookCar(user, car);
+            notifier.send(booking);
+            bookingRepository.commitTransaction();
+        } catch (NotificationFailedException|InsertException e){
+            bookingRepository.rollbackTransaction();
+            throw e;
+        }
 
         return booking;
 
