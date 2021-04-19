@@ -26,11 +26,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class BookCarTest {
 
-    @Mock(lenient = true)
-    IConfirmationNotifier notifier;
-
-
-
     /**
      * Escenario Éxito: Un usuario adulto inicia el proceso de reserva de un coche disponible.
      * El escenario se llevará a cabo correctamente.
@@ -56,12 +51,13 @@ public class BookCarTest {
         assertNotNull(bookingRepositoryStub);
         when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
 
-        assertNotNull(notifier);
+        IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
+        assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifierDummy);
         Booking booking = bookCarUseCase.execute(userStub,1);
 
-        verify(notifier,times(1)).send(any());
+        verify(notifierDummy,times(1)).send(any());
         assertTrue(booking instanceof Booking);
 
     }
@@ -92,14 +88,15 @@ public class BookCarTest {
         BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
         assertNotNull(bookingRepositoryDummy);
 
-        assertNotNull(notifier);
+        IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
+        assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifierDummy);
 
 
         assertThrows(CarNotAvailableException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
-            verify(notifier,times(0)).send(any());
+            verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
 
@@ -126,13 +123,14 @@ public class BookCarTest {
         BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
         assertNotNull(bookingRepositoryDummy);
 
-        assertNotNull(notifier);
+        IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
+        assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifierDummy);
 
         assertThrows(CarNotFoundException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
-            verify(notifier,times(0)).send(any());
+            verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
 
@@ -160,13 +158,14 @@ public class BookCarTest {
         BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
         assertNotNull(bookingRepositoryDummy);
 
-        assertNotNull(notifier);
+        IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
+        assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderDummy,bookingRepositoryDummy,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderDummy,bookingRepositoryDummy,notifierDummy);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
-            verify(notifier,times(0)).send(any());
+            verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
     }
@@ -193,13 +192,14 @@ public class BookCarTest {
         BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
         assertNotNull(bookingRepositoryDummy);
 
-        assertNotNull(notifier);
+        IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
+        assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderDummy,bookingRepositoryDummy,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderDummy,bookingRepositoryDummy,notifierDummy);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
-            verify(notifier,times(0)).send(any());
+            verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
 
@@ -224,13 +224,14 @@ public class BookCarTest {
         BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
         assertNotNull(bookingRepositoryDummy);
 
-        assertNotNull(notifier);
+        IConfirmationNotifier notifierDummy = mock(IConfirmationNotifier.class);
+        assertNotNull(notifierDummy);
 
-        BookCar bookCarUseCase = new BookCar(carFinderDummy,bookingRepositoryDummy,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderDummy,bookingRepositoryDummy,notifierDummy);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,0);
-            verify(notifier,times(0)).send(any());
+            verify(notifierDummy,times(0)).send(any());
             assertTrue(booking instanceof Booking);
         });
     }
