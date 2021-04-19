@@ -1,7 +1,5 @@
 package es.arturocandela.rentalcarapp.usecase;
 
-import es.arturocandela.rentalcarapp.model.implementation.User;
-
 public class UserPersistanceException extends Exception{
 
     public UserPersistanceException()

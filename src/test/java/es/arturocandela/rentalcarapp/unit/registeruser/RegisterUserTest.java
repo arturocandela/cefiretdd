@@ -1,9 +1,7 @@
 package es.arturocandela.rentalcarapp.unit.registeruser;
 
-import es.arturocandela.rentalcarapp.controller.UserController;
 import es.arturocandela.rentalcarapp.customtags.UnitTest;
-import es.arturocandela.rentalcarapp.model.AUser;
-import es.arturocandela.rentalcarapp.model.implementation.User;
+import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.service.DBConnection;
 import es.arturocandela.rentalcarapp.service.InsertException;
 import es.arturocandela.rentalcarapp.unit.commom.doubles.UserDouble;
@@ -12,7 +10,6 @@ import es.arturocandela.rentalcarapp.usecase.UserPersistanceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -47,7 +44,7 @@ public class RegisterUserTest {
         when(dbConnection.insert(anyString())).thenReturn(r.nextInt(high-low) + low);
         
         assertNotNull(registerUser);
-        AUser user = registerUser.execute(new UserDouble(6));
+        User user = registerUser.execute(new UserDouble(6));
         assertTrue(user instanceof User);
         
     }

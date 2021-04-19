@@ -2,8 +2,7 @@ package es.arturocandela.rentalcarapp.service;
 
 import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
-import es.arturocandela.rentalcarapp.model.implementation.User;
-import es.arturocandela.rentalcarapp.usecase.BookCar;
+import es.arturocandela.rentalcarapp.model.User;
 
 public class BookingRepository {
     private DBConnection dbConnection;

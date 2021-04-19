@@ -2,21 +2,18 @@ package es.arturocandela.rentalcarapp.unit.bookcar;
 
 import es.arturocandela.rentalcarapp.customtags.UnitTest;
 import es.arturocandela.rentalcarapp.model.Car;
+import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
-import es.arturocandela.rentalcarapp.model.implementation.User;
 import es.arturocandela.rentalcarapp.service.*;
 import es.arturocandela.rentalcarapp.usecase.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -29,8 +26,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class BookCarTest {
 
-    @Mock(lenient = true)
-    User userStub;
+
+
 
     @Mock(lenient = true)
     Car carStub;
@@ -41,8 +38,7 @@ public class BookCarTest {
     @Mock(lenient = true)
     IConfirmationNotifier notifier;
 
-    @Mock(lenient = true)
-    BookingRepository bookingRepositoryStub;
+
 
     /**
      * Escenario Éxito: Un usuario adulto inicia el proceso de reserva de un coche disponible.
@@ -53,8 +49,8 @@ public class BookCarTest {
     @Test
     public void adultsCanBookAvailableCars() throws BookingException,InsertException {
 
+        User userStub = mock(User.class);
         assertNotNull(userStub);
-        when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(true);
 
         assertNotNull(carStub);
@@ -63,13 +59,13 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
+        BookingRepository bookingRepositoryStub = mock(BookingRepository.class);
         assertNotNull(bookingRepositoryStub);
         when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
 
         assertNotNull(notifier);
 
         BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
-
         Booking booking = bookCarUseCase.execute(userStub,1);
 
         verify(notifier,times(1)).send(any());
@@ -87,8 +83,9 @@ public class BookCarTest {
     @DisplayName("F.TS.1: Adults cannot book unavailable cars")
     @Test
     public void adultsCantBookUnavailableCars() throws BookingException, InsertException {
+
+        User userStub = mock(User.class);
         assertNotNull(userStub);
-        when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(true);
 
         assertNotNull(carStub);
@@ -97,12 +94,12 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        assertNotNull(bookingRepositoryStub);
-        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+        BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryDummy);
 
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifier);
 
 
         assertThrows(CarNotAvailableException.class,()->{
@@ -122,19 +119,20 @@ public class BookCarTest {
     @Test
     public void adultsCantBookNonExistentCars() throws BookingException, InsertException
     {
+
+        User userStub = mock(User.class);
         assertNotNull(userStub);
-        when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(true);
 
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenThrow(CarNotFoundException.class);
 
-        assertNotNull(bookingRepositoryStub);
-        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+        BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryDummy);
 
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifier);
 
         assertThrows(CarNotFoundException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
@@ -153,8 +151,8 @@ public class BookCarTest {
     @Test
     public void minorsCannotBookAvailableCars() throws BookingException, InsertException
     {
+        User userStub = mock(User.class);
         assertNotNull(userStub);
-        when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(false);
 
         assertNotNull(carStub);
@@ -163,12 +161,12 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        assertNotNull(bookingRepositoryStub);
-        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+        BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryDummy);
 
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifier);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
@@ -185,8 +183,9 @@ public class BookCarTest {
     @Test
     public void minorsCannotBookUnvailableCars() throws BookingException,InsertException
     {
+
+        User userStub = mock(User.class);
         assertNotNull(userStub);
-        when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(false);
 
         assertNotNull(carStub);
@@ -195,12 +194,12 @@ public class BookCarTest {
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(carStub);
 
-        assertNotNull(bookingRepositoryStub);
-        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+        BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryDummy);
 
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifier);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,1);
@@ -218,19 +217,20 @@ public class BookCarTest {
     @Test
     public void minorsCannotBookNonExistentCars() throws BookingException, InsertException
     {
+
+        User userStub = mock(User.class);
         assertNotNull(userStub);
-        when(userStub.getId()).thenReturn(1);
         when(userStub.isAnAdult()).thenReturn(false);
 
         assertNotNull(carFinderStub);
         when(carFinderStub.find(anyInt())).thenReturn(null);
 
-        assertNotNull(bookingRepositoryStub);
-        when(bookingRepositoryStub.bookCar(any(),any())).thenReturn(new Booking(1,userStub,carStub));
+        BookingRepository bookingRepositoryDummy = mock(BookingRepository.class);
+        assertNotNull(bookingRepositoryDummy);
 
         assertNotNull(notifier);
 
-        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryStub,notifier);
+        BookCar bookCarUseCase = new BookCar(carFinderStub,bookingRepositoryDummy,notifier);
 
         assertThrows(MinorsCannotBookCarsException.class,()->{
             Booking booking = bookCarUseCase.execute(userStub,0);

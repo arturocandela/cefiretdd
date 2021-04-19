@@ -2,7 +2,7 @@ package es.arturocandela.rentalcarapp.usecase;
 
 import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
-import es.arturocandela.rentalcarapp.model.implementation.User;
+import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.service.*;
 
 public class BookCar {
