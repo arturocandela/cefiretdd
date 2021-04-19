@@ -45,7 +45,7 @@ public class BookCarTest {
      */
     @DisplayName("S.TS.1: Adults can book Available Cars")
     @Test
-    public void adultsCanBookAvailableCars() throws BookingException,InsertException,NotificationFailedException {
+    void adultsCanBookAvailableCars() throws BookingException,InsertException,NotificationFailedException {
 
         User userStub = mock(User.class);
         assertNotNull(userStub);
@@ -88,7 +88,7 @@ public class BookCarTest {
      */
     @DisplayName("F.TS.1: Adults cannot book unavailable cars")
     @Test
-    public void adultsCantBookUnavailableCars() throws BookingException, InsertException {
+    void adultsCantBookUnavailableCars() throws BookingException, InsertException {
 
         User userStub = mock(User.class);
         assertNotNull(userStub);
@@ -127,7 +127,7 @@ public class BookCarTest {
      */
     @DisplayName("F.TS.2: Adults cannot book non existent cars")
     @Test
-    public void adultsCantBookNonExistentCars() throws BookingException, InsertException
+    void adultsCantBookNonExistentCars() throws BookingException, InsertException
     {
 
         User userStub = mock(User.class);
@@ -164,7 +164,7 @@ public class BookCarTest {
      */
     @DisplayName("F.TS.3: Minors cannot book Available Cars")
     @Test
-    public void minorsCannotBookAvailableCars() throws BookingException, InsertException
+    void minorsCannotBookAvailableCars() throws BookingException, InsertException
     {
         User userStub = mock(User.class);
         assertNotNull(userStub);
@@ -197,7 +197,7 @@ public class BookCarTest {
      */
     @DisplayName("F.TS.4: Minors cannot book Unvailable Cars")
     @Test
-    public void minorsCannotBookUnvailableCars() throws BookingException,InsertException
+    void minorsCannotBookUnvailableCars() throws BookingException,InsertException
     {
 
         User userStub = mock(User.class);
@@ -232,7 +232,7 @@ public class BookCarTest {
      */
     @DisplayName("F.TS.5: Minors cannot book NonExistent Cars")
     @Test
-    public void minorsCannotBookNonExistentCars() throws BookingException, InsertException
+    void minorsCannotBookNonExistentCars() throws BookingException, InsertException
     {
 
         User userStub = mock(User.class);

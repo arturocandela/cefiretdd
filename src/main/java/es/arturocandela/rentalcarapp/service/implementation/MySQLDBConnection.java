@@ -70,9 +70,10 @@ public class MySQLDBConnection implements DBConnection {
     /// <exception cref="InsertException">If there is a problem with the insert</exception>
     public int insert(String sql) throws InsertException
     {
+        Statement statement = null;
         try
         {
-            Statement statement = conn.createStatement();
+            statement = conn.createStatement();
             statement.execute(sql,Statement.RETURN_GENERATED_KEYS);
 
             int autoIncKeyFromApi = -1;
@@ -89,6 +90,17 @@ public class MySQLDBConnection implements DBConnection {
         } catch(Exception e)
         {
             throw new InsertException(e);
+        }
+        finally {
+
+            if (statement != null){
+                try {
+                    statement.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
         }
     }
 

@@ -34,7 +34,7 @@ public class RegisterUserTest {
 
     @Test
     @DisplayName("Valid User Can Be Registered")
-    public void validUserCanBeRegistered() throws UserPersistanceException, InsertException {
+    void validUserCanBeRegistered() throws UserPersistanceException, InsertException {
 
         Random r = new Random();
         int low = 10;
