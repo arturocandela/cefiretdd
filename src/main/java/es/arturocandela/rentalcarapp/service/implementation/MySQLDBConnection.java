@@ -6,6 +6,7 @@ import es.arturocandela.rentalcarapp.service.NonValidConnectionException;
 
 import java.sql.*;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * This class manages a connection to MySQL Server Storage Provider
@@ -13,6 +14,7 @@ import java.util.Map;
 public class MySQLDBConnection implements DBConnection {
 
     private final Connection conn;
+    Logger logger = Logger.getLogger(this.getClass().getName());
 
     /**
      * Tries to create a connection to MySQL Database
@@ -62,37 +64,25 @@ public class MySQLDBConnection implements DBConnection {
     /// <exception cref="InsertException">If there is a problem with the insert</exception>
     public int insert(String sql) throws InsertException
     {
-        Statement statement = null;
-        try
-        {
-            statement = conn.createStatement();
-            statement.execute(sql,Statement.RETURN_GENERATED_KEYS);
+        try {
 
-            ResultSet rs = statement.getGeneratedKeys();
+            try(Statement statement = conn.createStatement()){
 
-            if (rs.next()) {
-                int id = rs.getInt(1);
-                rs.close();
-                return id;
-            } else {
-                throw new InsertException("I was unable to get the inserted id");
-            }
+                statement.execute(sql,Statement.RETURN_GENERATED_KEYS);
 
-        } catch(Exception e)
-        {
-            try {
+                ResultSet rs = statement.getGeneratedKeys();
 
-                if (statement != null){
-                    statement.close();
+                if (rs.next()) {
+                    int id = rs.getInt(1);
+                    rs.close();
+                    return id;
+                } else {
+                    throw new InsertException("I was unable to get the inserted id");
                 }
 
-
-            } catch (SQLException ex){
-
-                throw new InsertException(ex);
-
             }
 
+        } catch (SQLException e){
             throw new InsertException(e);
         }
 
