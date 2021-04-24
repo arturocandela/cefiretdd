@@ -6,6 +6,7 @@ public class Car {
     private String model;
     private String fuel;
     private boolean avilable;
+
     public Car(int id, String model, String fuel)
     {
         this.id = id;
@@ -18,7 +19,7 @@ public class Car {
     }
     public boolean isAvailable(){
         return avilable;
-    };
+    }
 }
 
 

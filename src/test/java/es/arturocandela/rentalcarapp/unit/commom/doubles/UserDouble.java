@@ -1,6 +1,6 @@
 package es.arturocandela.rentalcarapp.unit.commom.doubles;
 
-import es.arturocandela.rentalcarapp.model.implementation.User;
+import es.arturocandela.rentalcarapp.model.User;
 
 public class UserDouble extends User {
 

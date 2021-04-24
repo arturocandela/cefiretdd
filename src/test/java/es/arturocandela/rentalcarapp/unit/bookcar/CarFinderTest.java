@@ -32,7 +32,7 @@ public class CarFinderTest {
 
     @Test
     @DisplayName("Should Return a car If One is found")
-    public void shouldReturnACarIfOneIsFound() throws CarNotFoundException
+    void shouldReturnACarIfOneIsFound() throws CarNotFoundException
     {
         Map<String,Object> fakeReturn = new HashMap<>();
         fakeReturn.put("id",1);

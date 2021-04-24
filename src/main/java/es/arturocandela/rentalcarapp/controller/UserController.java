@@ -1,10 +1,8 @@
 package es.arturocandela.rentalcarapp.controller;
 
 import com.google.gson.Gson;
-import com.mysql.cj.MysqlConnection;
-import es.arturocandela.rentalcarapp.model.AUser;
+import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.service.DBConnection;
-import es.arturocandela.rentalcarapp.service.NonValidConnectionException;
 import es.arturocandela.rentalcarapp.usecase.RegisterUser;
 import es.arturocandela.rentalcarapp.usecase.UserPersistanceException;
 
@@ -21,7 +19,7 @@ public class UserController {
     RegisterUser registerUserCase;
 
 
-    public String register(AUser user){
+    public String register(User user){
 
         try {
             user = registerUserCase.execute(user);
@@ -39,10 +37,10 @@ public class UserController {
         return userResponse(user);
     }
 
-    private String userResponse(AUser user){
+    private String userResponse(User user){
 
         Gson gson = new Gson();
-        HashMap<String,AUser> mapRes = new HashMap<>();
+        HashMap<String,User> mapRes = new HashMap<>();
         mapRes.put("user",user);
         return gson.toJson(mapRes);
 

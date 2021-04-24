@@ -1,7 +1,6 @@
 package es.arturocandela.rentalcarapp.usecase;
 
-import es.arturocandela.rentalcarapp.model.AUser;
-import es.arturocandela.rentalcarapp.model.implementation.User;
+import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.service.DBConnection;
 import es.arturocandela.rentalcarapp.service.InsertException;
 
@@ -17,7 +16,7 @@ public class RegisterUser {
         this.conn = conn;
     }
 
-    public AUser execute(AUser user) throws UserPersistanceException
+    public User execute(User user) throws UserPersistanceException
     {
         String insertSQL =
                 String.format("INSERT INTO users(firstname,age,mail,password) " +

@@ -1,9 +1,7 @@
 package es.arturocandela.rentalcarapp.unit.registeruser;
 
-import es.arturocandela.rentalcarapp.controller.UserController;
 import es.arturocandela.rentalcarapp.customtags.UnitTest;
-import es.arturocandela.rentalcarapp.model.AUser;
-import es.arturocandela.rentalcarapp.model.implementation.User;
+import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.service.DBConnection;
 import es.arturocandela.rentalcarapp.service.InsertException;
 import es.arturocandela.rentalcarapp.unit.commom.doubles.UserDouble;
@@ -12,7 +10,6 @@ import es.arturocandela.rentalcarapp.usecase.UserPersistanceException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RegisterUserTest {
 
-    @Mock(lenient = true)
+    @Mock
     DBConnection dbConnection;
 
     @InjectMocks
@@ -37,7 +34,7 @@ public class RegisterUserTest {
 
     @Test
     @DisplayName("Valid User Can Be Registered")
-    public void validUserCanBeRegistered() throws UserPersistanceException, InsertException {
+    void validUserCanBeRegistered() throws UserPersistanceException, InsertException {
 
         Random r = new Random();
         int low = 10;
@@ -47,7 +44,7 @@ public class RegisterUserTest {
         when(dbConnection.insert(anyString())).thenReturn(r.nextInt(high-low) + low);
         
         assertNotNull(registerUser);
-        AUser user = registerUser.execute(new UserDouble(6));
+        User user = registerUser.execute(new UserDouble(6));
         assertTrue(user instanceof User);
         
     }
