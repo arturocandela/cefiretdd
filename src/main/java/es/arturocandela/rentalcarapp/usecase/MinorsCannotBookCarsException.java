@@ -7,14 +7,4 @@ public class MinorsCannotBookCarsException extends BookingException{
         super();
     }
 
-    public MinorsCannotBookCarsException(Exception e)
-    {
-        super(e);
-    }
-
-    public MinorsCannotBookCarsException(String message)
-    {
-        super(message);
-    }
-
 }

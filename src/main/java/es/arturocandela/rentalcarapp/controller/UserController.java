@@ -3,6 +3,7 @@ package es.arturocandela.rentalcarapp.controller;
 import com.google.gson.Gson;
 import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.service.DBConnection;
+import es.arturocandela.rentalcarapp.service.InsertException;
 import es.arturocandela.rentalcarapp.usecase.RegisterUser;
 import es.arturocandela.rentalcarapp.usecase.UserPersistanceException;
 
@@ -24,7 +25,7 @@ public class UserController {
         try {
             user = registerUserCase.execute(user);
             connection.close();
-        } catch (UserPersistanceException|SQLException $e) {
+        } catch (InsertException |SQLException $e) {
             try {
                 connection.close();
             } catch (SQLException e){

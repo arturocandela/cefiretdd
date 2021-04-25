@@ -5,6 +5,8 @@ import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.model.implementation.Booking;
 import es.arturocandela.rentalcarapp.service.*;
+import es.arturocandela.rentalcarapp.unit.common.car.CarMother;
+import es.arturocandela.rentalcarapp.unit.common.user.UserMother;
 import es.arturocandela.rentalcarapp.usecase.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,23 +72,19 @@ class BookCarTest {
     @Test
     void adultsCanBookAvailableCars() throws BookingException,InsertException,NotificationFailedException {
 
-        assertNotNull(userMock);
-        when(userMock.isAnAdult()).thenReturn(true);
+        User user = UserMother.generateAdult();
 
-        assertNotNull(carMock);
-        when(carMock.getId()).thenReturn(1);
-        when(carMock.isAvailable()).thenReturn(true);
+        Car car = CarMother.GenerateAvailable();
 
         assertNotNull(carFinderMock);
-        when(carFinderMock.find(anyInt())).thenReturn(carMock);
+        when(carFinderMock.find(anyInt())).thenReturn(car);
 
         assertNotNull(bookingRepositoryMock);
-        when(bookingRepositoryMock.bookCar(any(),any())).thenReturn(new Booking(1, userMock, carMock));
-
+        when(bookingRepositoryMock.bookCar(any(),any())).thenReturn(new Booking(1, user, car));
 
         assertNotNull(notifierMock);
 
-        Booking booking = bookCarUseCaseMock.execute(userMock, carMock.getId());
+        Booking booking = bookCarUseCaseMock.execute(user, car.getId());
 
         verify(bookingRepositoryMock,times(1)).beginTransaction();
         verify(bookingRepositoryMock,times(1)).commitTransaction();
@@ -109,14 +107,12 @@ class BookCarTest {
     @Test
     void adultsCantBookUnavailableCars() throws BookingException, InsertException {
 
-        assertNotNull(userMock);
-        when(userMock.isAnAdult()).thenReturn(true);
+        User user = UserMother.generateAdult();
 
-        assertNotNull(carMock);
-        when(carMock.isAvailable()).thenReturn(false);
+        Car unAvailableCar = CarMother.GenerateUnAvailableCar();
 
         assertNotNull(carFinderMock);
-        when(carFinderMock.find(anyInt())).thenReturn(carMock);
+        when(carFinderMock.find(anyInt())).thenReturn(unAvailableCar);
 
         assertNotNull(bookingRepositoryMock);
 
@@ -125,7 +121,7 @@ class BookCarTest {
         BookCar bookCarUseCase = new BookCar(carFinderMock,bookingRepositoryMock, notifierMock);
 
         assertThrows(CarNotAvailableException.class,()->{
-            Booking booking = bookCarUseCase.execute(userMock,1);
+            Booking booking = bookCarUseCase.execute(user,unAvailableCar.getId());
             checkRepositoryMockWithNoCallsToTransactionMethods(bookingRepositoryMock);
             verify(notifierMock,times(0)).send(any());
             assertTrue(booking instanceof Booking);

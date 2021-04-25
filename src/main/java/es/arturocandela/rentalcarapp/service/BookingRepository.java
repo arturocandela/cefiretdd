@@ -9,8 +9,6 @@ import java.util.logging.Logger;
 public class BookingRepository {
     private DBConnection dbConnection;
 
-    Logger logger = Logger.getLogger(this.getClass().getName());
-
     public BookingRepository(DBConnection dbConnection) {
         this.dbConnection = dbConnection;
     }
@@ -22,11 +20,14 @@ public class BookingRepository {
     }
 
     public void beginTransaction() {
+        //Now is usefull only for TDD Pruposes
     }
 
     public void commitTransaction() {
+        //Now is usefull only for TDD Pruposes
     }
 
     public void rollbackTransaction() {
+        //Now is usefull only for TDD Pruposes
     }
 }

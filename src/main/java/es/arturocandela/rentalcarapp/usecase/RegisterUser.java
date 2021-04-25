@@ -16,18 +16,14 @@ public class RegisterUser {
         this.conn = conn;
     }
 
-    public User execute(User user) throws UserPersistanceException
+    public User execute(User user) throws InsertException
     {
         String insertSQL =
                 String.format("INSERT INTO users(firstname,age,mail,password) " +
                         "values (\"%s\",%d,\"%s\",\"%s\")",user.getName(),user.getAge(),user.getMail(),user.getPassword());
-        try {
+
             user.setId(conn.insert(insertSQL));
             return user;
-        } catch (InsertException e)
-        {
-            throw new UserPersistanceException(e);
-        }
 
     }
 }
