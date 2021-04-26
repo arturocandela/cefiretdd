@@ -6,7 +6,7 @@
 
     <groupId>es.arturocandela</groupId>
     <artifactId>rentalcarapp</artifactId>
-    <version>1.0.1.21</version>
+    <version>1.0.1.22</version>
     <name>RentalCarArt</name>
     <packaging>war</packaging>
 
