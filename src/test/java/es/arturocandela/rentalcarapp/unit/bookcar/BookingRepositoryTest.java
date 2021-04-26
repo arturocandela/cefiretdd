@@ -2,13 +2,12 @@ package es.arturocandela.rentalcarapp.unit.bookcar;
 
 import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.User;
-import es.arturocandela.rentalcarapp.model.implementation.Booking;
+import es.arturocandela.rentalcarapp.model.Booking;
 import es.arturocandela.rentalcarapp.service.BookingRepository;
 import es.arturocandela.rentalcarapp.service.DBConnection;
 import es.arturocandela.rentalcarapp.service.InsertException;
 import es.arturocandela.rentalcarapp.unit.common.car.CarMother;
 import es.arturocandela.rentalcarapp.unit.common.user.UserMother;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

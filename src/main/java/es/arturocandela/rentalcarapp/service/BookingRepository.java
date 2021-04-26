@@ -1,10 +1,8 @@
 package es.arturocandela.rentalcarapp.service;
 
 import es.arturocandela.rentalcarapp.model.Car;
-import es.arturocandela.rentalcarapp.model.implementation.Booking;
+import es.arturocandela.rentalcarapp.model.Booking;
 import es.arturocandela.rentalcarapp.model.User;
-
-import java.util.logging.Logger;
 
 public class BookingRepository {
     private DBConnection dbConnection;

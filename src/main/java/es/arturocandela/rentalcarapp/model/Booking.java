@@ -1,4 +1,4 @@
-package es.arturocandela.rentalcarapp.model.implementation;
+package es.arturocandela.rentalcarapp.model;
 
 import es.arturocandela.rentalcarapp.model.User;
 import es.arturocandela.rentalcarapp.model.Car;

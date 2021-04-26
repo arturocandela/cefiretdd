@@ -3,7 +3,7 @@ package es.arturocandela.rentalcarapp.unit.bookcar;
 import es.arturocandela.rentalcarapp.customtags.UnitTest;
 import es.arturocandela.rentalcarapp.model.Car;
 import es.arturocandela.rentalcarapp.model.User;
-import es.arturocandela.rentalcarapp.model.implementation.Booking;
+import es.arturocandela.rentalcarapp.model.Booking;
 import es.arturocandela.rentalcarapp.service.*;
 import es.arturocandela.rentalcarapp.unit.common.car.CarMother;
 import es.arturocandela.rentalcarapp.unit.common.user.UserMother;
