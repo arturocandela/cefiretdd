@@ -7,7 +7,7 @@
         <packaging>war</packaging>
       </options>
     </properties>
-    <root id="archive" name="rentalcarapp-1.0.1.21.war">
+    <root id="archive" name="rentalcarapp-1.0.1.22.war">
       <element id="artifact" artifact-name="RentalCarArt:war exploded" />
     </root>
   </artifact>

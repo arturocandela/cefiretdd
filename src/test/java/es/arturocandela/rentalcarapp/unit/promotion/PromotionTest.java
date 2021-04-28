@@ -3,7 +3,6 @@ package es.arturocandela.rentalcarapp.unit.promotion;
 import es.arturocandela.rentalcarapp.customtags.UnitTest;
 import es.arturocandela.rentalcarapp.model.Promotion;
 import es.arturocandela.rentalcarapp.model.exception.*;
-import io.cucumber.java.eo.Do;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
