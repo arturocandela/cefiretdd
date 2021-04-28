@@ -5,19 +5,30 @@ import es.arturocandela.rentalcarapp.model.Promotion;
 import es.arturocandela.rentalcarapp.model.exception.NegativePromotionPeriodException;
 import es.arturocandela.rentalcarapp.model.exception.PastPeriodException;
 import es.arturocandela.rentalcarapp.model.exception.PromotionException;
+import es.arturocandela.rentalcarapp.service.PromotionRepository;
 import es.arturocandela.rentalcarapp.usecase.CreatePromotion;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @UseCase
+@ExtendWith(MockitoExtension.class)
 public class CreatePromotionTest {
+
+    @Spy
+    PromotionRepository promotionRepository = new PromotionRepository();
 
     @Test
     @DisplayName("S.TS.01: Un administrador puede crear una Promoción y Asignarle un rango de Fechas dentro\n" +
@@ -30,11 +41,13 @@ public class CreatePromotionTest {
         int discount = 5;
 
         Promotion promotion;
-        CreatePromotion useCase = new CreatePromotion();
+        CreatePromotion useCase = new CreatePromotion(promotionRepository);
 
         promotion = useCase.execute(startDate,endDate,discount);
 
         assertNotNull(promotion);
+
+        verify(promotionRepository,times(1)).save(promotion);
     }
 
     @Test
@@ -48,7 +61,7 @@ public class CreatePromotionTest {
 
         int discount = ThreadLocalRandom.current().nextInt(1, 100); // 100 is not included
 
-        CreatePromotion useCase = new CreatePromotion();
+        CreatePromotion useCase = new CreatePromotion(promotionRepository);
 
         assertThrows(NegativePromotionPeriodException.class,()->{
 
@@ -68,7 +81,7 @@ public class CreatePromotionTest {
 
         int discount = ThreadLocalRandom.current().nextInt(1, 100); // 100 is not included
 
-        CreatePromotion useCase = new CreatePromotion();
+        CreatePromotion useCase = new CreatePromotion(promotionRepository);
 
         assertThrows(PastPeriodException.class,()->{
 
